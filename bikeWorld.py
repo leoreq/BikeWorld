@@ -24,6 +24,8 @@ class BikeStore(object):
     def __init__(self,name,cash):
         self.name=name
         self.cash=cash
+        self.margin=0.2
+        self.profit=0
         inventory=dict()
         self.inventory=inventory
         print""
@@ -42,7 +44,19 @@ class BikeStore(object):
             #Assumtion: We will be using "market Price", last price will be set for the whole stock as current price"
             print""
             print("Nice Purchase from {} store. \nIt now has {} bikes of - {} model - ,priced at {} each").format(self.name,self.inventory[bike.model][1],bike.model,self.inventory[bike.model][0])
-
+    
+    def sell(self,model):
+        modelPrice=self.inventory.get(model,[0,0])[0]
+        modelCount=self.inventory.get(model,[0,0])[1]
+        if (modelCount==0):
+            print("{} model is not in stock. Please check our list of available items.").format(model)
+        else:
+            markupPrice=modelPrice*(1+self.margin)
+            self.inventory[model]=[modelPrice,modelCount-1]
+            self.profit+=(markupPrice-modelPrice)
+            self.cash+=markupPrice
+            print("Model {} - has been sold for {}, leaving only {} in stock. The profit of the operation is {} and the company now has {} of cash.").format(model,markupPrice,self.inventory[model][1],(markupPrice-modelPrice),self.cash)
+            
 SD=Bike("SD",22)
 
 BikeLandia=BikeStore("Bikelandia",5000)
@@ -52,3 +66,8 @@ SD=Bike("Plaza",23)
 BikeLandia.buy(SD)
 
 print(BikeLandia.inventory)
+
+BikeLandia.sell("SD")
+print(BikeLandia.inventory)
+BikeLandia.sell("SD")
+
