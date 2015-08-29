@@ -1,16 +1,54 @@
-class Bike(object):
-    """"This class will build a bike and price it in inverse relationship to the weight"""
+def printProduced(item,price,model,weight):
+    print""
+    print("A new {} has been built \nFor only {} $, you can have a - {} - that weighs {} pounds").format(item,price,model,weight)
+    
+def checkWeight(insertWeight,factor):
+        """Weight calculation Sanity Check: Given the price creation formulae, weight has to be always above the 21.6 per bike thresshold"""
+        while (insertWeight<21.6*factor):
+            print(" WEIGHT LOAD ERROR: weight has to be in pounds and above {}, please insert again.").format(21.6/factor)
+            reinsertedWeight=raw_input()
+            insertWeight=round(float(reinsertedWeight),2)
+        return insertWeight
+        
+def setPrice(insertWeight,factor):
+    """Price has an inverse relationship to weight, prices are modeled according to ->http://www.thebicyclelink.com/haro/masi-2015 """
+    price=round((40000*factor/((insertWeight/factor-21.5)*insertWeight/factor)),2)
+    return price
+
+class Wheels(object):
+    """"This class will represent wheels"""
     def __init__(self,model,weight):
         self.model=model
-        self.weight=self.checkWeight(weight)
+        self.factor=0.3
+        self.weight=checkWeight(weight,self.factor)
+        self.price=setPrice(self.weight,self.factor)
+        printProduced(self.__class__.__name__,self.price,self.model,self.weight)
+
+class Frame(object):
+    """"This class will represent Frames"""
+    def __init__(self,model,weight):
+        self.model=model
+        self.factor=0.7
+        self.weight=checkWeight(weight,self.factor)
+        self.price=setPrice(self.weight,self.factor)
+        printProduced(self.__class__.__name__,self.price,self.model,self.weight)
+
+
+class Bike(object):
+    """"This class will build a bike and price it in inverse relationship to the weight"""
+    def __init__(self,model,frame,wheels):
+        self.model=model
+        self.frame=frame
+        self.wheels=wheels
+        self.weight=self.checkWeight(frame.weight+wheels.weight)
         self.price=self.setPrice(self.weight)
         print""
-        print("A great Machine has been built !!! \nFor only {} $, you can have a - {} Freestyle Bike - that weighs {} pounds").format(self.price,self.model,self.weight)
+        print("A great Machine has been built !!! \nFor only {} $, you can have a - {} Freestyle Bike - that weighs {} pounds.\n It has a {} frame and {} Wheels ").format(self.price,self.model,self.weight,self.frame.model,self.wheels.model)
     
     def checkWeight(self,insertWeight):
-        """Weight calculation Sanity Check: Given the price creation formulae, weight has to be always above the 21.6 thresshold"""
+        """Weight calculation Sanity Check: Given the price creation formulae, weight has to be always above the 21.6 per bike thresshold"""
         while (insertWeight<21.6):
-            print(" WEIGHT LOAD ERROR: weight has to be in pounds and above 21.6 , please insert again.")
+            print(" WEIGHT LOAD ERROR: weight has to be in pounds and above 21.6 , please insert again. Current weight is {}").format(insertWeight)
             reinsertedWeight=raw_input()
             insertWeight=round(float(reinsertedWeight),2)
         return insertWeight
