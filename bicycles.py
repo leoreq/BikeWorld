@@ -1,3 +1,8 @@
+import sys
+
+def str_to_class(str):
+    return getattr(sys.modules[__name__], str)
+    
 def printProduced(item,price,model,weight):
     print""
     print("A new {} has been built \nFor only {} $, you can have a - {} - that weighs {} pounds").format(item,price,model,weight)
@@ -5,7 +10,7 @@ def printProduced(item,price,model,weight):
 def checkWeight(insertWeight,factor):
         """Weight calculation Sanity Check: Given the price creation formulae, weight has to be always above the 21.6 per bike thresshold"""
         while (insertWeight<21.6*factor):
-            print(" WEIGHT LOAD ERROR: weight has to be in pounds and above {}, please insert again.").format(21.6/factor)
+            print(" WEIGHT LOAD ERROR: weight has to be in pounds and above {}, please insert again.").format((21.6*factor))
             reinsertedWeight=raw_input()
             insertWeight=round(float(reinsertedWeight),2)
         return insertWeight
@@ -57,7 +62,24 @@ class Bike(object):
         """Price has an inverse relationship to weight, prices are modeled according to ->http://www.thebicyclelink.com/haro/masi-2015 """
         price=round((40000/((insertWeight-21.5)*insertWeight)),2)
         return price
-
+        
+class Manufacturer(object):
+    """This is a simple model of a manufacturer, that produces threee types of bikes and sells them on a proffit"""
+    def __init__(self,name,model1,profit):
+        self.name=name
+        self.profit=profit
+        self.model1=self.buildBike(model1)
+        print""
+        print ("MANUFACTURER {} - has just built some bikes: {}").format(self.name,self.model1.model)
+        
+    def buildBike(self,modelList):
+        modelWheels=modelList[0]+"Wheels"
+        modelFrame=modelList[0]+"Frame"
+        modelWheels=Wheels(modelList[0]+"Wheels",modelList[1]*0.3)
+        modelFrame=Frame(modelList[0]+"Frame",modelList[1]*0.7)
+        modelName=Bike(modelList[0],modelFrame,modelWheels)
+        return modelName
+        
 class BikeStore(object):
     def __init__(self,name,cash):
         self.name=name
